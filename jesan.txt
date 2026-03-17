@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+int main(void) {
+    int c;
+    int count = 0;          
+    int only_a = 1;         
+    int ab_valid = 1;      
+    int seen_b = 0;         
+    int after_a = 0;        
+    char first3[3];         
+
+    printf("Enter strings (one per line). Ctrl+D (Unix) or Ctrl+Z then Enter (Windows) to stop.\n");
+
+    while (1) {
+        c = getchar();
+        if (c == EOF) break;
+
+        if (c == '\n') {
+           
+            int is_abb = (count == 3 &&
+                          first3[0] == 'a' &&
+                          first3[1] == 'b' &&
+                          first3[2] == 'b');
+
+            int is_a_star = only_a;                
+            int is_a_star_b_plus = ab_valid && seen_b && after_a;
+
+            if (is_a_star || is_a_star_b_plus || is_abb)
+                printf("ACCEPTED\n");
+            else
+                printf("NOT accepted\n");
+
+           
+            count = 0;
+            only_a = 1;
+            ab_valid = 1;
+            seen_b = 0;
+            after_a = 0;
+            continue;
+        }
+
+        
+        if (count < 3) first3[count] = (char)c;
+        count++;
+
+      
+        if (c != 'a') only_a = 0;
+
+     
+        if (ab_valid) {
+            if (!after_a) {           
+                if (c == 'a') {
+                  
+                } else if (c == 'b') {
+                    after_a = 1;
+                    seen_b = 1;
+                } else {
+                    ab_valid = 0;
+                }
+            } else {                
+                if (c == 'b') {
+                    seen_b = 1;
+                } else {
+                    ab_valid = 0;
+                }
+            }
+        }
+    }
+
+    return 0;
+}

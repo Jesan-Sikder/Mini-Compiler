@@ -1,0 +1,25 @@
+# Compiled Object files
+*.o
+*.obj
+
+# Executables
+compiler
+*.exe
+*.out
+*.app
+
+# Editor backup and swap files
+*~
+*.swp
+*.swo
+.*.swp
+.DS_Store
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-*
+
+# Temporary files
+*.tmp
+*.bak
