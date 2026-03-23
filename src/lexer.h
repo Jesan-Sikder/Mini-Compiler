@@ -6,17 +6,33 @@
 
 typedef enum {
     TOKEN_INT,          // int keyword
+    TOKEN_FLOAT,        // float keyword
     TOKEN_PRINT,        // print keyword
+    TOKEN_IF,           // if keyword
+    TOKEN_ELSE,         // else keyword
+    TOKEN_WHILE,        // while keyword
+    TOKEN_RETURN,       // return keyword
     TOKEN_IDENTIFIER,   // variable names
-    TOKEN_NUMBER,       // integer literals
+    TOKEN_NUMBER,       // numeric literals
     TOKEN_ASSIGN,       // =
+    TOKEN_EQUAL,        // ==
+    TOKEN_NOT_EQUAL,    // !=
+    TOKEN_LESS,         // <
+    TOKEN_GREATER,      // >
+    TOKEN_LESS_EQUAL,   // <=
+    TOKEN_GREATER_EQUAL,// >=
     TOKEN_PLUS,         // +
     TOKEN_MINUS,        // -
     TOKEN_MULTIPLY,     // *
     TOKEN_DIVIDE,       // /
     TOKEN_SEMICOLON,    // ;
+    TOKEN_COMMA,        // ,
     TOKEN_LPAREN,       // (
     TOKEN_RPAREN,       // )
+    TOKEN_LBRACE,       // {
+    TOKEN_RBRACE,       // }
+    TOKEN_LBRACKET,     // [
+    TOKEN_RBRACKET,     // ]
     TOKEN_EOF,          // End of file
     TOKEN_INVALID       // Invalid token
 } TokenType;

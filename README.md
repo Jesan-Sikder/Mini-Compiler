@@ -4,25 +4,30 @@
 **Design and Implementation of a Mini Compiler Using C**
 
 ## Overview
-This is a complete mini compiler implementation in C for educational purposes. It demonstrates the fundamental phases of a compiler including lexical analysis, syntax analysis, symbol table management, and intermediate code generation.
+This is a mini compiler implementation in C for educational purposes. The project now follows a cleaner structure (`src/` and `docs/grammar/`) and demonstrates core compiler phases: lexical analysis, syntax analysis, symbol table management, intermediate code generation, a basic optimization pass, and simple bytecode emission.
 
 ## Features
 - ✅ **Lexical Analysis**: Tokenizes source code into meaningful tokens
 - ✅ **Syntax Analysis**: Validates grammar using recursive descent parsing
 - ✅ **Symbol Table Management**: Tracks variable declarations and usage
 - ✅ **Intermediate Code Generation**: Generates three-address code
+- ✅ **Optimization Phase**: Performs basic constant folding on generated intermediate code
+- ✅ **Code Generation Phase**: Emits stack-style bytecode-like output
 - ✅ **Error Handling**: Detects and reports syntax and semantic errors
 
 ## Supported Language Features
 
-### Data Type
-- `int` (integer type only)
+### Data Types
+- `int`
+- `float`
 
 ### Statements
 1. **Variable Declaration**
    ```c
    int a;
    int b = 10;
+   float pi = 3.14;
+   int nums[3];
    ```
 
 2. **Assignment Statement**
@@ -34,14 +39,34 @@ This is a complete mini compiler implementation in C for educational purposes. I
    - Operators: `+`, `-`, `*`, `/`
    - Example: `c = a + b * 2 - d / 3;`
 
-4. **Print Statement**
+4. **Control Flow**
+   ```c
+   if (a > 10) {
+       print(a);
+   } else {
+       print(0);
+   }
+
+   while (a < 20) {
+       a = a + 1;
+   }
+   ```
+
+5. **Functions**
+   ```c
+   int add(int x, int y) {
+       return x + y;
+   }
+   total = add(1, 2);
+   ```
+
+6. **Print Statement**
    ```c
    print(a);
    ```
 
 ### Language Rules
-- Only integer datatype is allowed
-- One statement per line
+- Statements may span multiple lines (especially inside `{ ... }` blocks)
 - Each statement must end with semicolon (`;`)
 - Variables must be declared before use
 - Follows standard operator precedence (`*`, `/` before `+`, `-`)
@@ -52,14 +77,33 @@ This is a complete mini compiler implementation in C for educational purposes. I
 program        → statement_list
 statement_list → statement statement_list | statement
 
-statement      → declaration | assignment | print_stmt
+statement      → declaration | assignment_or_call | print_stmt
+               | if_stmt | while_stmt | function_decl | return_stmt
 
-declaration    → int identifier ;
-               | int identifier = number ;
+declaration    → type identifier ;
+               | type identifier = expression ;
+               | type identifier [ number ] ;
 
-assignment     → identifier = expression ;
+type           → int | float
 
-print_stmt     → print ( identifier ) ;
+assignment_or_call → identifier = expression ;
+                   | identifier [ expression ] = expression ;
+                   | identifier ( arg_list ) ;
+
+print_stmt     → print ( expression ) ;
+
+if_stmt        → if ( condition ) block else_part
+else_part      → else block | ε
+while_stmt     → while ( condition ) block
+
+function_decl  → type identifier ( param_list ) block
+param_list     → type identifier (, type identifier)* | ε
+arg_list       → expression (, expression)* | ε
+return_stmt    → return expression ;
+block          → { statement_list }
+
+condition      → expression relop expression
+relop          → == | != | < | > | <= | >=
 
 expression     → term
                | expression + term
@@ -69,27 +113,36 @@ term           → factor
                | term * factor
                | term / factor
 
-factor         → identifier | number
+factor         → identifier
+               | identifier [ expression ]
+               | identifier ( arg_list )
+               | number
+               | ( expression )
 ```
 
 ## Project Structure
 
 ```
 Mini-compiler-/
-├── main.c                  # Main program - integrates all modules
-├── lexer.c                 # Lexical analyzer implementation
-├── lexer.h                 # Lexer header file
-├── parser.c                # Syntax analyzer implementation
-├── parser.h                # Parser header file
-├── symbol_table.c          # Symbol table implementation
-├── symbol_table.h          # Symbol table header file
-├── intermediate_code.c     # Intermediate code generator
-├── intermediate_code.h     # Intermediate code header file
-├── Makefile                # Build configuration
-├── program.txt             # Sample input program
-├── test1.txt               # Test case 1
-├── test2.txt               # Test case 2
-└── README.md               # This file
+├── src/
+│   ├── main.c
+│   ├── lexer.c
+│   ├── lexer.h
+│   ├── parser.c
+│   ├── parser.h
+│   ├── symbol_table.c
+│   ├── symbol_table.h
+│   ├── intermediate_code.c
+│   └── intermediate_code.h
+├── docs/
+│   └── grammar/
+│       └── GRAMMAR.md
+├── Makefile
+├── program.txt
+├── test1.txt
+├── test2.txt
+├── test3.txt
+└── README.md
 ```
 
 ## Compilation and Execution
@@ -107,7 +160,7 @@ make
 
 #### Manual Compilation
 ```bash
-gcc -Wall -Wextra -std=c99 -o compiler main.c lexer.c parser.c symbol_table.c intermediate_code.c
+gcc -Wall -Wextra -std=c99 -o compiler src/main.c src/lexer.c src/parser.c src/symbol_table.c src/intermediate_code.c
 ```
 
 ### Running the Compiler
@@ -122,6 +175,9 @@ make test1
 
 # Run with test2.txt
 make test2
+
+# Run with test3.txt (extended features)
+make test3
 ```
 
 #### Manual Execution
@@ -129,6 +185,7 @@ make test2
 ./compiler program.txt
 ./compiler test1.txt
 ./compiler test2.txt
+./compiler test3.txt
 ```
 
 ### Other Make Commands
@@ -297,22 +354,20 @@ Students will learn:
 ## Limitations
 
 As an educational project, this compiler has intentional limitations:
-- Only supports integer data type
-- No support for arrays, functions, or control structures
-- No optimization phase
-- No actual code generation (only intermediate code)
-- Limited error recovery
+- Function execution is represented at intermediate/bytecode level (no runtime VM yet)
+- Array bounds are not dynamically checked
+- Optimization is intentionally basic (constant folding only)
+- Bytecode emission is educational and not tied to a real backend
+- Error recovery is limited
 
 ## Future Enhancements (Optional)
 
-Students can extend this project by adding:
-- Support for float data type
-- If-else statements
-- While loops
-- Functions
-- Arrays
-- Optimization phase
-- Code generation (assembly or bytecode)
+Students can further extend this project by adding:
+- Strong type checking (int/float coercion rules)
+- Function scope stack frames and local scope isolation
+- Better optimization passes (dead code elimination, CSE)
+- Real backend code generation (assembly / VM executable format)
+- More robust semantic analysis and error recovery
 
 ## Credits
 

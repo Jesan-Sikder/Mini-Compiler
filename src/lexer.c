@@ -68,11 +68,23 @@ static Token get_next_token() {
         return token;
     }
     
-    // Numbers
+    // Numbers (int and float)
     if (isdigit(source_code[position])) {
         int i = 0;
-        while (isdigit(source_code[position]) && i < MAX_LEXEME_LENGTH - 1) {
-            token.lexeme[i++] = source_code[position++];
+        int has_dot = 0;
+        while (i < MAX_LEXEME_LENGTH - 1) {
+            if (isdigit(source_code[position])) {
+                token.lexeme[i++] = source_code[position++];
+            } else if (source_code[position] == '.' && !has_dot) {
+                has_dot = 1;
+                token.lexeme[i++] = source_code[position++];
+            } else {
+                break;
+            }
+        }
+        if (token.lexeme[i - 1] == '.') {
+            position--;
+            i--;
         }
         token.lexeme[i] = '\0';
         token.type = TOKEN_NUMBER;
@@ -90,11 +102,47 @@ static Token get_next_token() {
         // Check for keywords
         if (strcmp(token.lexeme, "int") == 0) {
             token.type = TOKEN_INT;
+        } else if (strcmp(token.lexeme, "float") == 0) {
+            token.type = TOKEN_FLOAT;
         } else if (strcmp(token.lexeme, "print") == 0) {
             token.type = TOKEN_PRINT;
+        } else if (strcmp(token.lexeme, "if") == 0) {
+            token.type = TOKEN_IF;
+        } else if (strcmp(token.lexeme, "else") == 0) {
+            token.type = TOKEN_ELSE;
+        } else if (strcmp(token.lexeme, "while") == 0) {
+            token.type = TOKEN_WHILE;
+        } else if (strcmp(token.lexeme, "return") == 0) {
+            token.type = TOKEN_RETURN;
         } else {
             token.type = TOKEN_IDENTIFIER;
         }
+        return token;
+    }
+
+    // Multi-character operators
+    if (source_code[position] == '=' && source_code[position + 1] == '=') {
+        position += 2;
+        token.type = TOKEN_EQUAL;
+        strcpy(token.lexeme, "==");
+        return token;
+    }
+    if (source_code[position] == '!' && source_code[position + 1] == '=') {
+        position += 2;
+        token.type = TOKEN_NOT_EQUAL;
+        strcpy(token.lexeme, "!=");
+        return token;
+    }
+    if (source_code[position] == '<' && source_code[position + 1] == '=') {
+        position += 2;
+        token.type = TOKEN_LESS_EQUAL;
+        strcpy(token.lexeme, "<=");
+        return token;
+    }
+    if (source_code[position] == '>' && source_code[position + 1] == '=') {
+        position += 2;
+        token.type = TOKEN_GREATER_EQUAL;
+        strcpy(token.lexeme, ">=");
         return token;
     }
     
@@ -106,6 +154,12 @@ static Token get_next_token() {
     switch (current) {
         case '=':
             token.type = TOKEN_ASSIGN;
+            break;
+        case '<':
+            token.type = TOKEN_LESS;
+            break;
+        case '>':
+            token.type = TOKEN_GREATER;
             break;
         case '+':
             token.type = TOKEN_PLUS;
@@ -122,11 +176,26 @@ static Token get_next_token() {
         case ';':
             token.type = TOKEN_SEMICOLON;
             break;
+        case ',':
+            token.type = TOKEN_COMMA;
+            break;
         case '(':
             token.type = TOKEN_LPAREN;
             break;
         case ')':
             token.type = TOKEN_RPAREN;
+            break;
+        case '{':
+            token.type = TOKEN_LBRACE;
+            break;
+        case '}':
+            token.type = TOKEN_RBRACE;
+            break;
+        case '[':
+            token.type = TOKEN_LBRACKET;
+            break;
+        case ']':
+            token.type = TOKEN_RBRACKET;
             break;
         default:
             token.type = TOKEN_INVALID;
@@ -159,17 +228,33 @@ TokenList tokenize() {
 const char* get_token_name(TokenType type) {
     switch (type) {
         case TOKEN_INT: return "INT";
+        case TOKEN_FLOAT: return "FLOAT";
         case TOKEN_PRINT: return "PRINT";
+        case TOKEN_IF: return "IF";
+        case TOKEN_ELSE: return "ELSE";
+        case TOKEN_WHILE: return "WHILE";
+        case TOKEN_RETURN: return "RETURN";
         case TOKEN_IDENTIFIER: return "IDENTIFIER";
         case TOKEN_NUMBER: return "NUMBER";
         case TOKEN_ASSIGN: return "ASSIGN";
+        case TOKEN_EQUAL: return "EQUAL";
+        case TOKEN_NOT_EQUAL: return "NOT_EQUAL";
+        case TOKEN_LESS: return "LESS";
+        case TOKEN_GREATER: return "GREATER";
+        case TOKEN_LESS_EQUAL: return "LESS_EQUAL";
+        case TOKEN_GREATER_EQUAL: return "GREATER_EQUAL";
         case TOKEN_PLUS: return "PLUS";
         case TOKEN_MINUS: return "MINUS";
         case TOKEN_MULTIPLY: return "MULTIPLY";
         case TOKEN_DIVIDE: return "DIVIDE";
         case TOKEN_SEMICOLON: return "SEMICOLON";
+        case TOKEN_COMMA: return "COMMA";
         case TOKEN_LPAREN: return "LPAREN";
         case TOKEN_RPAREN: return "RPAREN";
+        case TOKEN_LBRACE: return "LBRACE";
+        case TOKEN_RBRACE: return "RBRACE";
+        case TOKEN_LBRACKET: return "LBRACKET";
+        case TOKEN_RBRACKET: return "RBRACKET";
         case TOKEN_EOF: return "EOF";
         case TOKEN_INVALID: return "INVALID";
         default: return "UNKNOWN";

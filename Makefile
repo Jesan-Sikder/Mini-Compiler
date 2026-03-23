@@ -4,9 +4,10 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 TARGET = compiler
-SOURCES = main.c lexer.c parser.c symbol_table.c intermediate_code.c
+SRC_DIR = src
+SOURCES = $(SRC_DIR)/main.c $(SRC_DIR)/lexer.c $(SRC_DIR)/parser.c $(SRC_DIR)/symbol_table.c $(SRC_DIR)/intermediate_code.c
 OBJECTS = $(SOURCES:.c=.o)
-HEADERS = lexer.h parser.h symbol_table.h intermediate_code.h
+HEADERS = $(SRC_DIR)/lexer.h $(SRC_DIR)/parser.h $(SRC_DIR)/symbol_table.h $(SRC_DIR)/intermediate_code.h
 
 # Default target
 all: $(TARGET)
@@ -32,6 +33,10 @@ test1: $(TARGET)
 test2: $(TARGET)
 	./$(TARGET) test2.txt
 
+# Run with test case 3 (extended features)
+test3: $(TARGET)
+	./$(TARGET) test3.txt
+
 # Clean build artifacts
 clean:
 	rm -f $(OBJECTS) $(TARGET)
@@ -47,8 +52,9 @@ help:
 	@echo "  make run     - Build and run with program.txt"
 	@echo "  make test1   - Build and run with test1.txt"
 	@echo "  make test2   - Build and run with test2.txt"
+	@echo "  make test3   - Build and run with test3.txt"
 	@echo "  make clean   - Remove build artifacts"
 	@echo "  make rebuild - Clean and rebuild"
 	@echo "  make help    - Show this help message"
 
-.PHONY: all run test1 test2 clean rebuild help
+.PHONY: all run test1 test2 test3 clean rebuild help

@@ -182,7 +182,7 @@ gcc -Wall -Wextra -std=c99 -o compiler main.c lexer.c parser.c symbol_table.c in
 
 ## Project Structure
 ```
-raha-compiler-/
+Mini-compiler-/
 ├── Source Files
 │   ├── main.c
 │   ├── lexer.c / lexer.h
@@ -271,4 +271,4 @@ The implementation is clean, well-documented, and serves as an excellent learnin
 ---
 
 *Implementation completed on: March 15, 2026*
-*Repository: Reshad-Bin-Alam/raha-compiler-*
+*Repository: Mini-compiler-*

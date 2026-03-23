@@ -11,7 +11,7 @@ void print_banner() {
     printf("|                                                           |\n");
     printf("|        MINI COMPILER - Compiler Design Project            |\n");
     printf("|                                                           |\n");
-    printf("|  A simple compiler for educational purposes               |\n");
+    printf("|  A mini compiler with structured language extensions      |\n");
     printf("|  Implements: Lexical Analysis, Syntax Analysis,           |\n");
     printf("|  Symbol Table, and Intermediate Code Generation           |\n");
     printf("|                                                           |\n");
@@ -70,6 +70,17 @@ int main(int argc, char *argv[]) {
     printf("\nPhase 4: Intermediate Code Generation\n");
     printf("|-----------------------------------------------------------|\n");
     print_intermediate_code();
+
+    // Phase 6: Optimization
+    printf("\nPhase 5: Optimization\n");
+    printf("|-----------------------------------------------------------|\n");
+    optimize_intermediate_code();
+    print_intermediate_code();
+
+    // Phase 7: Code generation
+    printf("\nPhase 6: Code Generation (Bytecode)\n");
+    printf("|-----------------------------------------------------------|\n");
+    print_bytecode();
     
     // Compilation successful
     printf("\n|-----------------------------------------------------------|\n");

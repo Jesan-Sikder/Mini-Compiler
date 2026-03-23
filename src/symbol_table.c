@@ -29,11 +29,22 @@ int add_symbol(const char *name, const char *datatype) {
     entry->name[MAX_NAME_LENGTH - 1] = '\0';
     strncpy(entry->datatype, datatype, 19);
     entry->datatype[19] = '\0';
-    entry->value = 0;
+    entry->value = 0.0;
     entry->initialized = 0;
+    entry->is_array = 0;
+    entry->array_size = 0;
     
     symbol_table.count++;
     return symbol_table.count - 1;
+}
+
+int add_array_symbol(const char *name, const char *datatype, int array_size) {
+    int index = add_symbol(name, datatype);
+    if (index != -1) {
+        symbol_table.entries[index].is_array = 1;
+        symbol_table.entries[index].array_size = array_size;
+    }
+    return index;
 }
 
 // Look up a symbol by name
@@ -47,7 +58,7 @@ int lookup_symbol(const char *name) {
 }
 
 // Update symbol value
-void update_symbol_value(const char *name, int value) {
+void update_symbol_value(const char *name, double value) {
     int index = lookup_symbol(name);
     if (index != -1) {
         symbol_table.entries[index].value = value;
@@ -71,18 +82,35 @@ int is_initialized(const char *name) {
     return 0;
 }
 
+const char* get_symbol_datatype(const char *name) {
+    int index = lookup_symbol(name);
+    if (index != -1) {
+        return symbol_table.entries[index].datatype;
+    }
+    return NULL;
+}
+
+int is_symbol_array(const char *name) {
+    int index = lookup_symbol(name);
+    if (index != -1) {
+        return symbol_table.entries[index].is_array;
+    }
+    return 0;
+}
+
 // Print symbol table
 void print_symbol_table() {
     printf("\n========== SYMBOL TABLE ==========\n");
-    printf("%-15s %-15s %-15s %-15s\n", "Name", "Data Type", "Value", "Initialized");
-    printf("--------------------------------------------------------------\n");
+    printf("%-15s %-15s %-15s %-10s %-15s\n", "Name", "Data Type", "Value", "Array", "Initialized");
+    printf("---------------------------------------------------------------------------\n");
     
     for (int i = 0; i < symbol_table.count; i++) {
         SymbolEntry *entry = &symbol_table.entries[i];
-        printf("%-15s %-15s %-15d %-15s\n",
+        printf("%-15s %-15s %-15g %-10s %-15s\n",
                entry->name,
                entry->datatype,
                entry->value,
+               entry->is_array ? "Yes" : "No",
                entry->initialized ? "Yes" : "No");
     }
     printf("==============================================================\n");
