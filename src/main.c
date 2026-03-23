@@ -5,6 +5,7 @@
 #include "symbol_table.h"
 #include "intermediate_code.h"
 
+
 void print_banner() {
     printf("\n");
     printf("|-----------------------------------------------------------|\n");
@@ -13,11 +14,12 @@ void print_banner() {
     printf("|                                                           |\n");
     printf("|  A mini compiler with structured language extensions      |\n");
     printf("|  Implements: Lexical Analysis, Syntax Analysis,           |\n");
-    printf("|  Symbol Table, and Intermediate Code Generation           |\n");
-    printf("|                                                           |\n");
+    printf("|  Symbol Table,  Intermediate Code Generation,             |\n");
+    printf("|       Optimization and Code Generation .....              |\n");
     printf("|-----------------------------------------------------------|\n");
     printf("\n");
 }
+
 
 void print_usage() {
     printf("Usage: compiler <input_file>\n");
