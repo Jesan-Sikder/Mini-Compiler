@@ -1,5 +1,19 @@
-int x = 5;
-int y = 3;
-int z;
-z = x + y * 2;
-print(z);
+int main() {
+  int a;
+  int b;
+  int i;
+  int sum;
+  a = 3;
+  b = 5;
+  if (a < b) {
+    sum = 0;
+  } else {
+    sum = 100;
+  }
+  i = 0;
+  while (i < 10) {
+    sum = sum + i;
+    i = i + 1;
+  }
+  return sum;
+}
