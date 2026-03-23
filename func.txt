@@ -1,0 +1,16 @@
+int add(int x, int y) {
+  return x + y;
+}
+
+int main() {
+  int z;
+  z = add(2, 3);
+
+  if (z == 5) {
+    z = z + 10;
+  } else {
+    z = 0;
+  }
+
+  return z;
+}
